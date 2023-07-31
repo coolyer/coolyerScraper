@@ -64,16 +64,16 @@ The script uses Selenium for browser automation and BeautifulSoup for web scrapi
 
 This project aims to be a versatile and efficient product scraper, capable of retrieving prices and product names from various online retailers. While the current version provides a solid foundation, there are several exciting features planned for future updates:
 
-    Expanded Browser Support: In upcoming versions, we plan to add support for more web browsers, including Brave, Opera, and Bing. This will give users greater flexibility in choosing their preferred browser for the scraping process.
+* Expanded Browser Support: In upcoming versions, we plan to add support for more web browsers, including Brave, Opera, and Bing. This will give users greater flexibility in choosing their preferred browser for the scraping process.
 
-    Code Optimization: Our commitment to excellence means continually refining and optimizing the codebase. Future updates will focus on enhancing performance and streamlining the scraping process for improved efficiency.
+* Code Optimization: My commitment to excellence means continually refining and optimizing the codebase. Future updates will focus on enhancing performance and streamlining the scraping process for improved efficiency.
 
-    Increased Retailer Coverage: We understand the importance of having access to a wide range of retailers. As such, we aim to expand the list of supported websites, adding more options for users to scrape prices and product names from their favorite online stores.
+ * Increased Retailer Coverage: I understand the importance of having access to a wide range of retailers. As such, I aim to expand the list of supported websites, adding more options for users to scrape prices and product names from your favorite online stores.
 
-    Customized Website Selection: To provide users with even more control, a feature to select specific websites for scraping will be implemented. This option allows users to target their preferred retailers, ensuring a more personalized and relevant scraping experience.
+ * Customized Website Selection: To provide users with even more control, a feature to select specific websites for scraping will be implemented. This option allows users to target their preferred retailers, ensuring a more personalized and relevant scraping experience.
 
-I am dedicated to maintaining and enhancing this product scraper to meet the evolving needs of our users. Your feedback and suggestions are valuable to me, so feel free to share your ideas for additional features or improvements. Together, we can make this tool even more powerful and user-friendly. Thank you for using our product scraper!
+**I am dedicated to maintaining and enhancing this product scraper to meet the evolving needs of our users. Your feedback and suggestions are valuable to me, so feel free to share your ideas for additional features or improvements. Together, we can make this tool even more powerful and user-friendly. Thank you for using our product scraper!**
 
 ## The Team
-|Main Programer: Josh|
+**|Main Programer: Josh|**
 
