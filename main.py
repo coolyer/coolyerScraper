@@ -1,57 +1,37 @@
 # Import the required libraries
-from selenium import webdriver
-from selenium.webdriver.firefox.service import Service as FirefoxService
-from webdriver_manager.firefox import GeckoDriverManager
 from bs4 import BeautifulSoup
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
-
-# Define a function to get an integer input from the user and validate it
-def get_integer_input(prompt):
-    while True:
-        value = input(prompt)
-        if value.isdigit():
-            return int(value)
-        print("Invalid input. Please enter a number.")
-
+from selenium.common.exceptions import NoSuchElementException
+#Use to clean the code
+from retailers_links import retailersFile
+from input_validation import get_integer_input
+from browers_choice import initialize_driver
+import sys
+sys.dont_write_bytecode = True
 # Start of loop
 while True:
-    # Get the browser choice, web wait time, and product name from the user
-    browser_choice = get_integer_input("Choose a browser: \n1. Firefox\n2. Chrome\n Please choose a number only: ")
+    # Get the browser choice 
+    browser_choice = get_integer_input("Choose a browser:\n1. Firefox\n2. Chrome\nPlease choose a number only: ")
+    
+    # Web wait time
     webWaitTime = get_integer_input("Enter your estimated website loading time based on your connection speed: ")
+    
+    # Product name from the user
     product_name = input("Enter the product name: ")
-
+    
+    # Initialize the driver based on the browser choice using the function from browser_handler.py
+    driver = initialize_driver(browser_choice)
+    
     # Define a function to scrape the product prices and names from different retailers
     def scrape_product_prices(product_name):
-        # Define a dictionary of retailers and their search URLs
-        retailers = {
-            'Tesco': 'https://www.tesco.com/groceries/en-GB/search?query=',
-            'Asda': 'https://groceries.asda.com/search/',
-            'B&M': 'https://www.bmstores.co.uk/search?q=',
-            'Sainsburys': 'https://www.sainsburys.co.uk/gol-ui/SearchResults/',
-        }
+        # Define a dictionary of retailers and their search URLs grabbing from the retailersSites.py
+        retailers = retailersFile()
+
         # Define an empty dictionary to store the product prices and names
         product_data = {}
-
-        # Choose the browser based on the user's input
-        if browser_choice == 1:
-            # Firefox
-            options = webdriver.FirefoxOptions()
-            options.add_argument('--headless=new') # Run the browser in headless mode (without opening a visible browser window)
-            options.log.level = "OFF" # Turn off logging messages
-            driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
-        elif browser_choice == 2:
-            # Chrome
-            options = webdriver.ChromeOptions()    
-            options.add_argument('--headless=new') # Run the browser in headless mode (without opening a visible browser window)
-            driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
-        else:
-            print("Invalid browser choice. Exiting...")
-            exit(1) # Exit the program if the user enters an invalid choice
         
         # Loop through each retailer and their search URL
         for retailer, url in retailers.items():
@@ -69,9 +49,18 @@ while True:
             
             if retailer == 'Tesco':
                 try:
+                    first_tile = driver.find_element(By.XPATH, '(//li[@class="product-list--list-item first"])[1]')
+
+                        # Check if the first tile contains the offer text element
+                    try:
+                            clubcard_price_element = first_tile.find_element(By.XPATH, './/span[contains(@class, "offer-text")]')
+                            # Retrieve the clubcard price element if it exists
+                            clubcard_price = clubcard_price_element.text.strip()
+                    except NoSuchElementException:
+                            # If no clubcard price element is found, set the clubcard_price to an empty string
+                            clubcard_price = ''
                     # Find the element that contains the clubcard price, if any, and extract its text
-                    clubcard_price_element = driver.find_element(By.CLASS_NAME, 'offer-text')
-                    clubcard_price = clubcard_price_element.get_attribute('innerHTML').strip()
+                    
                     # Find the element that contains the regular price and wait for it to be visible
                     price_element = WebDriverWait(driver, webWaitTime).until(
                         EC.visibility_of_element_located((By.CLASS_NAME, 'beans-price__text'))
@@ -95,33 +84,7 @@ while True:
                 
                 # Store the product name, price, and clubcard price (if any) in the dictionary
                 product_data[retailer] = (name, price, clubcard_price)
-            
-            elif retailer == "Asda":
-                try:
-                    # Find the price element on the Asda website
-                    price_element = WebDriverWait(driver, webWaitTime).until(
-                        EC.visibility_of_element_located((By.CLASS_NAME, 'co-product__price'))
-                    )
-                    # Find the item name element on the Asda website
-                    item_name_element = WebDriverWait(driver, webWaitTime).until(
-                        EC.visibility_of_element_located((By.CLASS_NAME, 'co-product__anchor')))
-                except:
-                    print(f"{retailer}" + " error/Item not found")
-                    continue
-                 
-                # Extract the product name from the product name element
-                name_html = item_name_element.get_attribute('outerHTML')
-                soup = BeautifulSoup(name_html, 'html.parser')
-                name = soup.get_text(strip=True)
-                
-                # Extract the price from the price element
-                price_html = price_element.get_attribute('innerHTML')
-                soup = BeautifulSoup(price_html, 'html.parser')
-                price = soup.get_text(strip=True).replace('now', '')
-                
-                # Store the product name and price in the dictionary
-                product_data[retailer] = (name, price)
-            
+              
             elif retailer == "B&M":
                 try:
                     # Find the price element on the B&M website
@@ -177,6 +140,59 @@ while True:
                 
                  # Store the product name, regular price, and Nectar price (if any) in the dictionary
                 product_data[retailer] = (name, price, "Nectar Price:", nectar_price)
+            
+            elif retailer == "Iceland":
+                try:
+                    # Find the price element on the B&M website
+                    price_element = WebDriverWait(driver, webWaitTime).until(
+                        EC.visibility_of_element_located((By.CLASS_NAME, 'product-sales-price'))
+                    )
+                    # Find the item name element on the B&M website
+                    item_name_element = WebDriverWait(driver, webWaitTime).until(
+                        EC.visibility_of_element_located((By.CLASS_NAME, 'name-link')))
+                except:
+                    print(f"{retailer}" + " error/Item not found")
+                    continue
+                
+                # Extract the product name from the product name element
+                name_html = item_name_element.get_attribute('outerHTML')
+                soup = BeautifulSoup(name_html, 'html.parser')
+                name = soup.get_text(strip=True)
+                
+                # Extract the price from the price element
+                price_html = price_element.get_attribute('innerHTML')
+                soup = BeautifulSoup(price_html, 'html.parser')
+                price = soup.get_text(strip=True).replace('now', '')
+                
+                # Store the product name and price in the dictionary
+                product_data[retailer] = (name, price)  
+                  
+            elif retailer == "Poundland":
+                try:
+                    # Find the price element on the B&M website
+                    price_element = WebDriverWait(driver, webWaitTime).until(
+                        EC.visibility_of_element_located((By.CLASS_NAME, 'price'))
+                    )
+                    # Find the item name element on the B&M website
+                    item_name_element = WebDriverWait(driver, webWaitTime).until(
+                        EC.visibility_of_element_located((By.CLASS_NAME, 'product-item-link')))
+                except:
+                    print(f"{retailer}" + " error/Item not found")
+                    continue
+                
+                # Extract the product name from the product name element
+                name_html = item_name_element.get_attribute('outerHTML')
+                soup = BeautifulSoup(name_html, 'html.parser')
+                name = soup.get_text(strip=True)
+                
+                # Extract the price from the price element
+                price_html = price_element.get_attribute('innerHTML')
+                soup = BeautifulSoup(price_html, 'html.parser')
+                price = soup.get_text(strip=True).replace('now', '')
+                
+                # Store the product name and price in the dictionary
+                product_data[retailer] = (name, price)    
+                
         # Close the browser window
         driver.quit()
 
@@ -191,13 +207,14 @@ while True:
     for retailer, data in results.items():
         # Use a default value of None for the third and fourth elements if they do not exist
         name, price, clubcard_price, nectar_price = data + ("",) * (4 - len(data))
-        print(f"| {retailer}, {name}: Regular Price: {price}| {clubcard_price} {nectar_price}") # Use currency symbol and clubcard price and nectar price
+        print(f"| {retailer}: {name}| Regular Price: {price}| {clubcard_price} {nectar_price}") # Use currency symbol and clubcard price and nectar price
 
     # Ask the user if they want to search for another product
+    print("Occasionally, the program may fetch an incorrect clubcard/Nectar prices")
     another_search = input("Do you want to search for another product? (yes/no): ").lower()
     if another_search != "yes":
         break # Exit the loop if the user says no
 
 # End of loop, exit the program
-print("Thank you for using the product scraper. Goodbye!")
+print("Thank you for using the CoolyerScraper. Please consider improving via code inputs or ideas or donating(Not needed but will be apprecited). Goodbye! ")
 
