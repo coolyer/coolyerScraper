@@ -77,7 +77,7 @@ This project aims to be a versatile and efficient product scraper, capable of re
 ## The Team
 **|Main Programer: Josh|**
 
-#Bugs 
+# Bugs 
 * Grabbing the wrong Nectar/Clubcard prices.
 * Firefox not going headless.
 * Sometimes error with Sainsburys not showing products prices or not scalping correctly.
