@@ -259,11 +259,11 @@ while True:
         print(f"| {retailer}: {name}| Regular Price: {price}| {clubcard_price} {nectar_price} {bmdeals}") # Use currency symbol and clubcard price and nectar price
 
     # Ask the user if they want to search for another product
-    print("Occasionally, the program may fetch an incorrect clubcard/Nectar prices")
+    #print("Occasionally, the program may fetch an incorrect clubcard/Nectar prices")
     another_search = input("Do you want to search for another product? (yes/no): ").lower()
     if another_search != "yes":
         break # Exit the loop if the user says no
 
 # End of loop, exit the program
-print("Thank you for using the CoolyerScraper. Please consider improving via code inputs or ideas or donating(Not needed but will be apprecited). Goodbye! ")
+print("Thank you for using CoolyerScraper. Please consider improving via code inputs or ideas or donating(Not needed but will be apprecited),\nGoodbye! ")
 
