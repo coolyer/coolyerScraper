@@ -9,8 +9,6 @@ from selenium.common.exceptions import NoSuchElementException
 from retailers_links import retailersFile
 from input_validation import get_integer_input
 from browers_choice import initialize_driver
-import sys
-sys.dont_write_bytecode = True
 # Start of loop
 while True:
     # Get the browser choice 
@@ -68,9 +66,8 @@ while True:
                     # Find the element that contains the product name and wait for it to be visible, excluding some unwanted elements by their text content
                     item_name_element = WebDriverWait(driver, webWaitTime).until(
                         EC.visibility_of_element_located((By.XPATH, '//span[contains(@class, "styled__Text-sc-1xbujuz-1")][contains(@class, "beans-link__text")][not(text()="Skip to main content" or text()="Skip to search" or text()="Skip to basket" or text()="Register" or text()="Sign in" or text()="Contact us" or text()= "Help" or text()="Feedback")]')))
-                except:
-                    # Handle any errors that might occur during the scraping process and skip this retailer
-                    print(f"{retailer}" + " error/Item not found")
+                except Exception as e:
+                    print(f"{retailer} error: {str(e)}")
                     continue
                 
                 # Extract the product name and price from the elements
@@ -95,7 +92,8 @@ while True:
                     item_name_element = WebDriverWait(driver, webWaitTime).until(
                         EC.visibility_of_element_located((By.CLASS_NAME, 'bm-product-stretch-link')))
                 except:
-                    print(f"{retailer}" + " error/Item not found")
+                    print(f"{retailer} error: {str(Exception)}")
+                    traceback.print_exc()
                     continue
                 
                 # Extract the product name from the product name element
@@ -113,20 +111,43 @@ while True:
             
             elif retailer == "Sainsburys":
                 try:
-                      # Check if the Nectar price exists on the page
-                    nectar_price_element = driver.find_element(By.CLASS_NAME, 'pt__cost--price')
-                    nectar_price = nectar_price_element.get_attribute('innerHTML').strip()
-                    # Find the regular price element on the Sainsburys website
+                    first_tile = driver.find_element(By.XPATH, '(//li[@class="pt-grid-item ln-o-grid__item ln-u-1/2@xs ln-u-1/3@sm ln-u-1/4@md ln-u-1/5@xl"])[1]')
+
+                    # Check if the first tile contains the nectar price element
+                    try:
+                        nectar_price_element = first_tile.find_element(By.XPATH, './/span[contains(@class, "pt__cost--price")]')
+                        # Retrieve the nectar price element if it exists
+                        nectar_price = "Nectar price:" + nectar_price_element.text.strip() 
+                    except NoSuchElementException:
+                        # If no nectar price element is found, set the nectar_price to an empty string
+                        nectar_price = ''
+
+                    # Find the element that contains the regular price and wait for it to be visible
                     price_element = WebDriverWait(driver, webWaitTime).until(
                         EC.visibility_of_element_located((By.CLASS_NAME, 'pt__cost__retail-price'))
-                        )
+                    )
                     # Find the item name element on the Sainsburys website
                     item_name_element = WebDriverWait(driver, webWaitTime).until(
-                             EC.visibility_of_element_located((By.XPATH, '//a[contains(@class, "pt__link")]'))
+                        EC.visibility_of_element_located((By.XPATH, '//a[contains(@class, "pt__link")]'))
                     )
-                except:
-                    print(f"{retailer}" + " error/Item not found")
+
+                    # Extract the product name from the item name element
+                    name_html = item_name_element.get_attribute('outerHTML')
+                    soup = BeautifulSoup(name_html, 'html.parser')
+                    name = soup.get_text(strip=True)
+
+                    # Extract the regular price from the price element
+                    price_html = price_element.get_attribute('innerHTML')
+                    soup = BeautifulSoup(price_html, 'html.parser')
+                    price = soup.get_text(strip=True)
+
+                    # Store the product name, regular price, and nectar price (if any) in the dictionary
+                    product_data[retailer] = (name, price, "Nectar Price:", nectar_price)
+                except Exception as e:
+                    print(f"{retailer} Item not found/error: {str(e)}")
                     continue
+                
+
                 
                 # Extract the product name from the product name element
                 name_html = item_name_element.get_attribute('outerHTML')
@@ -139,7 +160,7 @@ while True:
                 price = soup.get_text(strip=True)
                 
                  # Store the product name, regular price, and Nectar price (if any) in the dictionary
-                product_data[retailer] = (name, price, "Nectar Price:", nectar_price)
+                product_data[retailer] = (name, price, nectar_price)
             
             elif retailer == "Iceland":
                 try:
@@ -176,8 +197,8 @@ while True:
                     # Find the item name element on the B&M website
                     item_name_element = WebDriverWait(driver, webWaitTime).until(
                         EC.visibility_of_element_located((By.CLASS_NAME, 'product-item-link')))
-                except:
-                    print(f"{retailer}" + " error/Item not found")
+                except Exception as e:
+                    print(f"{retailer} Item not found/error: {str(e)}")
                     continue
                 
                 # Extract the product name from the product name element
