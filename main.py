@@ -14,7 +14,7 @@ import version_checker
 #Version checker will never force it to auto install.
 if __name__ == "__main__":
     # Replace this with your current software version
-    current_version = "0.01"
+    current_version = "1.0.0"
 
     # Replace this URL with the GitHub API endpoint for your repository
     repo_url = "https://api.github.com/repos/coolyer/coolyerScraper/releases/latest"

@@ -8,7 +8,7 @@ def get_latest_version(repo_url):
 
         if isinstance(data, dict):
             tag_name = data.get('tag_name')
-            if tag_name and tag_name.startswith('release'):
+            if tag_name and tag_name.startswith('1.0.0'):
                 return tag_name
             else:
                 raise ValueError("Invalid or missing version in the GitHub API response.")
@@ -58,23 +58,3 @@ def version_check(current_version, repo_url):
             return "Your software is newer than the latest version:", latest_version
         else:
             return "Your software is up-to-date. Latest version:", latest_version
-
-if __name__ == "__main__":
-    # Replace this with your current software version
-    current_version = "0.01"
-
-    # Replace this URL with the GitHub API endpoint for your repository
-    repo_url = "https://api.github.com/repos/your_username/your_repository/releases/latest"
-
-    latest_version = get_latest_version(repo_url)
-    if latest_version:
-        if current_version == latest_version:
-           checkerV = print(f"Your software is up-to-date. Current version: {current_version}")
-        else:
-            checkerV =print(f"Your software is outdated. Current version: {current_version}. Latest version: {latest_version}")
-            
-def checker():
-    checkerstuff = {
-        checkerV.text
-    }
-    return checkerstuff
