@@ -9,7 +9,24 @@ from selenium.common.exceptions import NoSuchElementException
 from retailers_links import retailersFile
 from input_validation import get_integer_input
 from browers_choice import initialize_driver
-# Start of loop
+import version_checker
+
+#Version checker will never force it to auto install.
+if __name__ == "__main__":
+    # Replace this with your current software version
+    current_version = "0.01"
+
+    # Replace this URL with the GitHub API endpoint for your repository
+    repo_url = "https://api.github.com/repos/coolyer/coolyerScraper/releases/latest"
+
+    latest_version = version_checker.get_latest_version(repo_url)
+    if latest_version:
+        if current_version == latest_version:
+            print(f"Your software is up-to-date. Current version: {current_version}")
+        else:
+            print(f"Your software is outdated. Current version: {current_version}. Latest version: {latest_version}")
+
+
 while True:
     # Get the browser choice 
     browser_choice = get_integer_input("Choose a browser:\n1. Firefox\n2. Chrome\nPlease choose a number only: ")
@@ -93,7 +110,6 @@ while True:
                         EC.visibility_of_element_located((By.CLASS_NAME, 'bm-product-stretch-link')))
                 except:
                     print(f"{retailer} error: {str(Exception)}")
-                    traceback.print_exc()
                     continue
                 
                 # Extract the product name from the product name element
