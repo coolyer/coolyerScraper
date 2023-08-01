@@ -101,6 +101,18 @@ while True:
               
             elif retailer == "B&M":
                 try:
+                    
+                    first_tile = driver.find_element(By.XPATH, '(//li[@class="col-6 col-landscape-4 mt-3 pt-lg-3 px-lg-3"])[1]')
+
+                        # Check if the first tile contains the offer text element
+                    try:
+                            bmdeals_elements = first_tile.find_element(By.XPATH, './/span[contains(@class, "badge badge-primary text-wrap")]')
+                            # Retrieve the clubcard price element if it exists
+                            bmdeals = bmdeals_elements.text.strip()
+                    except NoSuchElementException:
+                            # If no clubcard price element is found, set the clubcard_price to an empty string
+                            bmdeals = ''
+                    # Find the element that contains the clubcard price, if any, and extract its text
                     # Find the price element on the B&M website
                     price_element = WebDriverWait(driver, webWaitTime).until(
                         EC.visibility_of_element_located((By.XPATH, '//span[contains(@class, "d-block h5 mb-0 text-secondary bm-line-compact")][contains(@class, "bm-line-compact")]'))
@@ -123,7 +135,7 @@ while True:
                 price = soup.get_text(strip=True).replace('now', '')
                 
                 # Store the product name and price in the dictionary
-                product_data[retailer] = (name, price)      
+                product_data[retailer] = (name, price, bmdeals)      
             
             elif retailer == "Sainsburys":
                 try:
@@ -243,8 +255,8 @@ while True:
     print(f"## Price comparison for {product_name}")
     for retailer, data in results.items():
         # Use a default value of None for the third and fourth elements if they do not exist
-        name, price, clubcard_price, nectar_price = data + ("",) * (4 - len(data))
-        print(f"| {retailer}: {name}| Regular Price: {price}| {clubcard_price} {nectar_price}") # Use currency symbol and clubcard price and nectar price
+        name, price, clubcard_price, nectar_price, bmdeals = data + ("",) * (5 - len(data))
+        print(f"| {retailer}: {name}| Regular Price: {price}| {clubcard_price} {nectar_price} {bmdeals}") # Use currency symbol and clubcard price and nectar price
 
     # Ask the user if they want to search for another product
     print("Occasionally, the program may fetch an incorrect clubcard/Nectar prices")

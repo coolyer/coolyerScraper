@@ -3,16 +3,17 @@ from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
-
+import os
 
 def initialize_driver(browser_choice):
     if browser_choice == 1:
         # Firefox
         options = webdriver.FirefoxOptions()
-        options.add_argument('-headless')
         options.add_argument('-host=127.0.0.1')
-        options.log.level = "OFF" # Turn off logging messages
-        driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install(), options=options))
+        options.headless = True
+        # Start the Firefox browser with the provided options
+        print("Starting Firefox")
+        driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
     elif browser_choice == 2:
         # Chrome
         options = webdriver.ChromeOptions()    
