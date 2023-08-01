@@ -78,5 +78,4 @@ This project aims to be a versatile and efficient product scraper, capable of re
 **|Main Programer: Josh|**
 
 # Bugs 
-* Firefox not going headless.
 * Sometimes error with Sainsburys not showing products prices or not scalping correctly. (Set to 3 seconds when asked in the code)
