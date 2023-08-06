@@ -7,7 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 #Use to clean the code
 from retailers_links import retailersFile
-from input_validation import get_integer_input, brower_number_check
+from input_validation import get_integer_input
 from browers_choice import initialize_driver
 
 while True:
@@ -97,7 +97,6 @@ while True:
                             EC.visibility_of_element_located((By.XPATH, './/strong[contains(@class,"co-product__price")]'))
                             )
                             
-
                             item_name_element = tile.find_element(By.XPATH, './/h3[@class="co-product__title"]/a[@class="co-product__anchor"]')
                             
                             try:
@@ -128,8 +127,7 @@ while True:
                     
                 except Exception as e:
                     print(f"{retailer} error: {str(e)}")
-                
-                
+                     
             elif retailer == 'B&M':
                 try:
                     tiles = driver.find_elements(By.XPATH, '//li[@class="col-6 col-landscape-4 mt-3 pt-lg-3 px-lg-3"]')[:num_tiles_to_search]
