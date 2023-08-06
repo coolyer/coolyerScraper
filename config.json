@@ -1,0 +1,40 @@
+{
+    "retailers": [
+      {
+        "name": "Tesco",
+        "url": "https://www.tesco.com/groceries/en-GB/search?query=",
+        "enabled": true
+      },
+      {
+        "name": "Asda",
+        "url": "https://groceries.asda.com/search/",
+        "enabled": true
+      },
+      {
+        "name": "B&M",
+        "url": "https://www.bmstores.co.uk/search?q=",
+        "enabled": true
+      },
+      {
+        "name": "Sainsburys",
+        "url": "https://www.sainsburys.co.uk/gol-ui/SearchResults/",
+        "enabled": true
+      },
+      {
+        "name": "Iceland",
+        "url": "https://www.iceland.co.uk/search?q=",
+        "enabled": true
+      },
+      {
+        "name": "Poundshop",
+        "url": "https://www.poundshop.com/catalogsearch/result/?q=",
+        "enabled": true
+      },
+      {
+        "name": "Poundland",
+        "url": "https://www.poundland.co.uk/catalogsearch/result/?q=",
+        "enabled": true
+      }
+    ]
+  }
+  

@@ -80,7 +80,7 @@ while True:
                             else:
                                 product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price}|\n")
                         except Exception as e:
-                                print(f"{retailer} error: {str(e)}")
+                                pass
                             # Add an error handler or continue based on your needs
                     
                 except Exception as e:
@@ -185,7 +185,7 @@ while True:
                     product_data[retailer] = ""
                     for index, tile in enumerate(tiles):
                         try:
-                            price_element1 = tile.find_elements(By.XPATH, './/p[contains(@class, "pricePerUnit")]')
+                            price_element1 = tile.find_elements(By.XPATH, './/div[@class = "pricing"]/p[@class = "pricePerUnit"]')
                             price_element2 = tile.find_elements(By.XPATH, './/span[contains(@class, "pt__cost__retail-price pt__cost__retail-price--with-nectar-not-associated")]')
 
                             # Extract the price based on whichever element is found
@@ -205,7 +205,7 @@ while True:
                             elif name_element2:
                                 name = name_element2[0].text.strip()
                             try:
-                                nectar_price_element1 = tile.find_elements(By.XPATH, './/p[contains(@class, "pricePerUnit nectarPrice")]')
+                                nectar_price_element1 = tile.find_elements(By.XPATH, './/div[@class = "pricing"]/p[@class = "pricePerUnit nectarPrice"]')
                                 nectar_price_element2 = tile.find_elements(By.XPATH, './/span[contains(@class, "pt__cost--price")]')
                                 # Extract the nectar price based on whichever element is found
                                 nectar_price = ""
@@ -214,7 +214,7 @@ while True:
                                 elif nectar_price_element2:
                                     nectar_price = "Nectar price: " + nectar_price_element2[0].text.strip()
                             except NoSuchElementException:
-                                 nectar_price = ''
+                                nectar_price = ''
 
                             # Extract the regular price from the price element
                             
@@ -231,9 +231,8 @@ while True:
                     product_data[retailer] = ""
                     for index, tile in enumerate(tiles):
                         try:
-                            price_element = WebDriverWait(driver, webWaitTime).until(
-                            EC.visibility_of_element_located((By.CLASS_NAME, 'product-sales-price'))
-                            )
+                            price_elements = tile.find_elements(By.XPATH, './/span[@class="product-sales-price"]/span')
+                            price = price_elements[0].text.strip()
                             
 
                             item_name_element = tile.find_element(By.CLASS_NAME, 'name-link')
@@ -246,21 +245,18 @@ while True:
                                 iceLandOffers = None
                             
                             name = item_name_element.text.strip()
-                            price_html = price_element.get_attribute('innerHTML')
-                            soup = BeautifulSoup(price_html, 'html.parser')
-                            price = soup.get_text(strip=True).replace("now", "")
+                            
                             
                             if iceLandOffers is not None:
                                 product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price}|Multibuy Price: {iceLandOffers} each \n")
                             else:
                                 product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price}|\n")
                         except Exception as e:
-                                print(f"{retailer} error: {str(e)}")
-                            # Add an error handler or continue based on your needs
-                    
+                                pass # There is a list index out of range error but shows all the correct prices and products so no idea.
+                
                 except Exception as e:
-                    print(f"{retailer} error: {str(e)}")  
-
+                    print(f"{retailer} error: {str(e)}")
+                    
             elif retailer == 'Poundshop':
                 try:
                     tiles = driver.find_elements(By.XPATH, '//li[@class= "rrp item product product-item"]')
@@ -279,7 +275,7 @@ while True:
                                 poundShopOffersStart = poundShopOffersStart_element.text.strip()
                                 poundShopOffersExtra_element = tile.find_element(By.CLASS_NAME, 'qty-label')
                                 poundShopOffersExtra = poundShopOffersExtra_element.text.strip()
-                                poundShopOffers = (f"{poundShopOffersStart} {poundShopOffersExtra}")
+                                poundShopOffers = (f" {poundShopOffersStart} {poundShopOffersExtra}")
                             except NoSuchElementException:
                                 poundShopOffers = None
                             
@@ -305,10 +301,8 @@ while True:
                     product_data[retailer] = ""
                     for index, tile in enumerate(tiles):
                         try:
-                            price_element = WebDriverWait(driver, webWaitTime).until(
-                            EC.visibility_of_element_located((By.CLASS_NAME, 'c-product__price'))
-                            )
-
+                            price_element = tile.find_elements(By.CLASS_NAME, 'c-product__price')
+                            price = price_element[0].text.strip()
                             item_name_element = tile.find_element(By.CLASS_NAME, 'c-product__title')
                             
                             try:
@@ -319,9 +313,7 @@ while True:
                                 poundLandOffers = None
                             
                             name = item_name_element.text.strip()
-                            price_html = price_element.get_attribute('innerHTML')
-                            soup = BeautifulSoup(price_html, 'html.parser')
-                            price = soup.get_text(strip=True).replace("now", "")
+                           
                             
                             if poundLandOffers is not None:
                                 product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price}|{poundLandOffers} each \n")
@@ -349,6 +341,7 @@ while True:
         # Print the retailer and then the data.
         print(f"{retailer}:\n{data}")
         
+    print("If the retailer shows no product its either error, the product as taken it to the exact product page which the code cant read or maybe a error.\nBefore reporting do check the website for the product.")    
     another_search = input("Do you want to search for another product? (yes/no): ").lower()
     if another_search != "yes":
         break # Exit the loop if the user says no
