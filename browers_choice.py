@@ -20,6 +20,5 @@ def initialize_driver(browser_choice):
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
     else:
         print("Invalid browser choice. Exiting...")
-        exit(1) # Exit the program if the user enters an invalid choice
-        
+        exit(1) # Exit the program if the user enters an invalid choice   
     return driver

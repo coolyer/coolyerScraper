@@ -4,4 +4,3 @@ def get_integer_input(prompt):
         if value.isdigit():
             return int(value)
         print("Invalid input. Please enter a number.")
-        return

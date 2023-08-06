@@ -9,23 +9,6 @@ from selenium.common.exceptions import NoSuchElementException
 from retailers_links import retailersFile
 from input_validation import get_integer_input
 from browers_choice import initialize_driver
-import version_checker
-
-#Version checker will never force it to auto install.
-if __name__ == "__main__":
-    # Replace this with your current software version
-    current_version = "1.0.0"
-
-    # Replace this URL with the GitHub API endpoint for your repository
-    repo_url = "https://api.github.com/repos/coolyer/coolyerScraper/releases/latest"
-
-    latest_version = version_checker.get_latest_version(repo_url)
-    if latest_version:
-        if current_version == latest_version:
-            print(f"Your software is up-to-date. Current version: {current_version}")
-        else:
-            print(f"Your software is outdated. Current version: {current_version}. Latest version: {latest_version}")
-
 
 while True:
     # Get the browser choice 
@@ -42,8 +25,6 @@ while True:
     # Initialize the driver based on the browser choice using the function from browser_handler.py
     driver = initialize_driver(browser_choice)
 
-    
-    
     # Define a function to scrape the product prices and names from different retailers
     def scrape_product_prices(product_name):
         # Define a dictionary of retailers and their search URLs grabbing from the retailersSites.py
@@ -104,6 +85,7 @@ while True:
                 except Exception as e:
                     print(f"{retailer} error: {str(e)}")
 
+
             elif retailer == 'Asda':
                 try:
                     tiles = driver.find_elements(By.XPATH, '//li[@class=" co-item co-item--rest-in-shelf "]')[:num_tiles_to_search]
@@ -134,9 +116,6 @@ while True:
                             price_html = price_element.get_attribute('innerHTML')
                             soup = BeautifulSoup(price_html, 'html.parser')
                             price = soup.get_text(strip=True).replace("now", "")
-                            
-                            
-                            
                             
                             if Asdalitres is not None:
                                 product_data[retailer] += (f"|Tile {index + 1} - Name: {name} {Asdalitres}, Price: {price}|{deal_info}\n")
@@ -238,8 +217,6 @@ while True:
                             except NoSuchElementException:
                                  nectar_price = ''
 
-                           
-
                             # Extract the regular price from the price element
                             
                             product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price}|{nectar_price}\n")
@@ -249,7 +226,79 @@ while True:
                 except Exception as e:
                         print(f"{retailer} error: {str(e)}")
                     
-                
+            elif retailer == 'Iceland':
+                try:
+                    tiles = driver.find_elements(By.CLASS_NAME, 'grid-tile ')[:num_tiles_to_search]
+                    product_data[retailer] = ""
+                    for index, tile in enumerate(tiles):
+                        try:
+                            price_element = WebDriverWait(driver, webWaitTime).until(
+                            EC.visibility_of_element_located((By.CLASS_NAME, 'product-sales-price'))
+                            )
+                            
+
+                            item_name_element = tile.find_element(By.CLASS_NAME, 'name-link')
+                            
+                            try:
+                                iceLandOffers_element = tile.find_element(By.CLASS_NAME, 'price')
+                                iceLandOffers = iceLandOffers_element.text.strip()
+                                
+                            except NoSuchElementException:
+                                iceLandOffers = None
+                            
+                            name = item_name_element.text.strip()
+                            price_html = price_element.get_attribute('innerHTML')
+                            soup = BeautifulSoup(price_html, 'html.parser')
+                            price = soup.get_text(strip=True).replace("now", "")
+                            
+                            if iceLandOffers is not None:
+                                product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price}|Multibuy Price: {iceLandOffers} each \n")
+                            else:
+                                product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price}|\n")
+                        except Exception as e:
+                                print(f"{retailer} error: {str(e)}")
+                            # Add an error handler or continue based on your needs
+                    
+                except Exception as e:
+                    print(f"{retailer} error: {str(e)}")  
+
+            elif retailer == 'Poundshop':
+                try:
+                    tiles = driver.find_elements(By.XPATH, '//li[@class= "rrp item product product-item"]')[:num_tiles_to_search]
+                    product_data[retailer] = ""
+                    for index, tile in enumerate(tiles):
+                        try:
+                            price_element = WebDriverWait(driver, webWaitTime).until(
+                            EC.visibility_of_element_located((By.CLASS_NAME, 'price'))
+                            )
+                            
+
+                            item_name_element = tile.find_element(By.CLASS_NAME, 'product-item-link')
+                            
+                            try:
+                                poundlandOffersStart_element = tile.find_element(By.CLASS_NAME, 'price')
+                                poundlandOffersStart = poundlandOffersStart_element.text.strip()
+                                poundlandOffersExtra_element = tile.find_element(By.CLASS_NAME, 'qty-label')
+                                poundlandOffersExtra = poundlandOffersExtra_element.text.strip()
+                                poundlandOffers = (f"{poundlandOffersStart} {poundlandOffersExtra}")
+                            except NoSuchElementException:
+                                poundlandOffers = None
+                            
+                            name = item_name_element.text.strip()
+                            price_html = price_element.get_attribute('innerHTML')
+                            soup = BeautifulSoup(price_html, 'html.parser')
+                            price = soup.get_text(strip=True).replace("now", "")
+                            
+                            if poundlandOffers is not None:
+                                product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price}|{poundlandOffers}\n")
+                            else:
+                                product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price}|\n")
+                        except Exception as e:
+                                print(f"{retailer} error: {str(e)}")
+                            # Add an error handler or continue based on your needs
+                    
+                except Exception as e:
+                    print(f"{retailer} error: {str(e)}")    
                 
         # Close the browser window
         driver.quit()
@@ -265,8 +314,6 @@ while True:
         # Print the retailer and then the data.
         print(f"{retailer}:\n{data}")
         
-    # Ask the user if they want to search for another product
-    #print("Occasionally, the program may fetch an incorrect clubcard/Nectar prices")
     another_search = input("Do you want to search for another product? (yes/no): ").lower()
     if another_search != "yes":
         break # Exit the loop if the user says no
