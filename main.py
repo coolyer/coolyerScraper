@@ -17,7 +17,6 @@ while True:
     # Product name from the user
     product_name = input("Enter the product name: ")
 
-    # Search x amount of tiles on a website 
     # Not Needed anymore. Can be readadded by doing [:num_tiles_to_search] on each retailers tiles search html.
     #num_tiles_to_search = get_integer_input("Enter the number of tiles to search for: ")
 
