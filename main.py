@@ -12,7 +12,7 @@ from browers_choice import initialize_driver
 
 while True:
     # Web wait time
-    webWaitTime = 3
+    webWaitTime = 4
     
     # Product name from the user
     product_name = input("Enter the product name: ")
@@ -187,7 +187,7 @@ while True:
                     for index, tile in enumerate(tiles):
                         try:
                             price_element1 = tile.find_elements(By.XPATH, './/p[contains(@class, "pricePerUnit")]')
-                            price_element2 = tile.find_elements(By.XPATH, './/span[contains(@class, "pt__cost__retail-price")]')
+                            price_element2 = tile.find_elements(By.XPATH, './/span[contains(@class, "pt__cost__retail-price pt__cost__retail-price--with-nectar-not-associated")]')
 
                             # Extract the price based on whichever element is found
                             price = ""
