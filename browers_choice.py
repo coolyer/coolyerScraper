@@ -8,7 +8,7 @@ def initialize_driver(browser_choice):
     if browser_choice == 1:
         # Firefox
         options = webdriver.FirefoxOptions()
-        options.add_argument('-host=127.0.0.1')
+        #options.add_argument('-host=127.0.0.1')
         options.headless = True
         # Start the Firefox browser with the provided options
         print("Starting Firefox")

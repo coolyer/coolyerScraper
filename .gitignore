@@ -2,3 +2,4 @@ CoolyerScraper.spec
 dist
 build
 geckodriver.log
+setup.py

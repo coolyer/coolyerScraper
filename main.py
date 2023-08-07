@@ -92,10 +92,9 @@ while True:
                 except Exception as e:
                     print(f"{retailer} error: {str(e)}")
 
-
             elif retailer == 'Asda':
                 try:
-                    tiles = driver.find_elements(By.XPATH, '//li[@class=" co-item co-item--rest-in-shelf "]')
+                    tiles = driver.find_elements(By.XPATH, '//li[@class=" co-item co-item--rest-in-shelf "]')[:retailers[retailer]['num_tiles_to_search']]
                     product_data[retailer] = ""
                     for index, tile in enumerate(tiles):
                         try:
@@ -136,7 +135,7 @@ while True:
                      
             elif retailer == 'B&M':
                 try:
-                    tiles = driver.find_elements(By.XPATH, '//li[@class="col-6 col-landscape-4 mt-3 pt-lg-3 px-lg-3"]')
+                    tiles = driver.find_elements(By.XPATH, '//li[@class="col-6 col-landscape-4 mt-3 pt-lg-3 px-lg-3"]')[:retailers[retailer]['num_tiles_to_search']]
                     product_data[retailer] = ''
                     for index, tile in enumerate(tiles):
                         try:
@@ -185,8 +184,8 @@ while True:
          
             elif retailer == 'Sainsburys':
                 try:
-                    tiles1 = driver.find_elements(By.XPATH, '//li[@class= "pt-grid-item ln-o-grid__item ln-u-1/2@xs ln-u-1/3@sm ln-u-1/4@md ln-u-1/5@xl"]')
-                    tiles2 = driver.find_elements(By.XPATH, '//li[@class="gridItem"]')
+                    tiles1 = driver.find_elements(By.XPATH, '//li[@class= "pt-grid-item ln-o-grid__item ln-u-1/2@xs ln-u-1/3@sm ln-u-1/4@md ln-u-1/5@xl"]')[:retailers[retailer]['num_tiles_to_search']]
+                    tiles2 = driver.find_elements(By.XPATH, '//li[@class="gridItem"]')[:retailers[retailer]['num_tiles_to_search']]
                     tiles = tiles1 + tiles2
                     product_data[retailer] = ""
                     for index, tile in enumerate(tiles):
@@ -233,7 +232,7 @@ while True:
                     
             elif retailer == 'Iceland':
                 try:
-                    tiles = driver.find_elements(By.CLASS_NAME, 'grid-tile ')
+                    tiles = driver.find_elements(By.CLASS_NAME, 'grid-tile ')[:retailers[retailer]['num_tiles_to_search']]
                     product_data[retailer] = ""
                     for index, tile in enumerate(tiles):
                         try:
@@ -265,7 +264,7 @@ while True:
                     
             elif retailer == 'Poundshop':
                 try:
-                    tiles = driver.find_elements(By.XPATH, '//li[@class= "rrp item product product-item"]')
+                    tiles = driver.find_elements(By.XPATH, '//li[@class= "rrp item product product-item"]')[:retailers[retailer]['num_tiles_to_search']]
                     product_data[retailer] = ""
                     for index, tile in enumerate(tiles):
                         try:
@@ -303,7 +302,7 @@ while True:
 
             elif retailer == 'Poundland':
                 try:
-                    tiles = driver.find_elements(By.XPATH, '//li[@class= " item product product-item c-product c-product__item"]')
+                    tiles = driver.find_elements(By.XPATH, '//li[@class= " item product product-item c-product c-product__item"]')[:retailers[retailer]['num_tiles_to_search']]
                     product_data[retailer] = ""
                     for index, tile in enumerate(tiles):
                         try:
