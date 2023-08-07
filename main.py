@@ -35,8 +35,9 @@ while True:
         product_data = {}
         # Loop through each retailer and their search URL
         for retailer, url in retailers.items():
+            retailers = retailersFile()
             # Construct the full search URL by appending the product name to the base URL
-            search_url = url + product_name
+            search_url = retailers[retailer]['url'] + product_name
             # Open the search URL using the chosen browser
             driver.get(search_url)
             # Wait for some time for the web page to load
@@ -48,7 +49,7 @@ while True:
             # Scrape the data for each retailer using different CSS selectors or XPath expressions
             if retailer == 'Tesco':
                 try:
-                    tiles = driver.find_elements(By.XPATH, '//li[@class="product-list--list-item"]')
+                    tiles = driver.find_elements(By.XPATH, '//li[@class="product-list--list-item"]')[:retailers[retailer]['num_tiles_to_search']]
                     product_data[retailer] = ''
                     for index, tile in enumerate(tiles):
                         try:
@@ -61,11 +62,15 @@ while True:
                                             By.XPATH,
                                             './/span[@class= "styled__Text-sc-1xbujuz-1 ldbwMG beans-link__text"]')))
 
+                            pricePerMil_element = WebDriverWait(tile, webWaitTime).until(
+                            EC.visibility_of_element_located((By.CSS_SELECTOR, '.styled__StyledFootnote-sc-119w3hf-7.icrlVF.styled__Subtext-sc-8qlq5b-2.bNJmdc.beans-price__subtext'))
+                             )
                             try:
                                 clubcard_price_element = tile.find_element(By.XPATH, './/span[contains(@class, "offer-text")]')
                                 clubcard_price = clubcard_price_element.text.strip()
                             except NoSuchElementException:
                                 clubcard_price = None
+
 
                             name_html = item_name_element.get_attribute('outerHTML')
                             soup = BeautifulSoup(name_html, 'html.parser')
@@ -75,10 +80,11 @@ while True:
                             price_html = price_element.get_attribute('innerHTML')
                             soup = BeautifulSoup(price_html, 'html.parser')
                             price = soup.get_text(strip=True)
+                            pricePerMil = pricePerMil_element.text.strip()
                             if clubcard_price is not None:
-                                product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price}|{clubcard_price}\n")
+                                product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price} {pricePerMil}|{clubcard_price}\n")
                             else:
-                                product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price}|\n")
+                                product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price} {pricePerMil}|\n")
                         except Exception as e:
                                 pass
                             # Add an error handler or continue based on your needs

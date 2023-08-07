@@ -3,37 +3,44 @@
       {
         "name": "Tesco",
         "url": "https://www.tesco.com/groceries/en-GB/search?query=",
-        "enabled": true
+        "enabled": true,
+        "num_tiles_to_search": 10
       },
       {
         "name": "Asda",
         "url": "https://groceries.asda.com/search/",
-        "enabled": true
+        "enabled": true,
+        "num_tiles_to_search": 10
       },
       {
         "name": "B&M",
         "url": "https://www.bmstores.co.uk/search?q=",
-        "enabled": true
+        "enabled": true,
+        "num_tiles_to_search": 10
       },
       {
         "name": "Sainsburys",
         "url": "https://www.sainsburys.co.uk/gol-ui/SearchResults/",
-        "enabled": true
+        "enabled": true,
+        "num_tiles_to_search": 10
       },
       {
         "name": "Iceland",
         "url": "https://www.iceland.co.uk/search?q=",
-        "enabled": true
+        "enabled": true,
+        "num_tiles_to_search": 10
       },
       {
         "name": "Poundshop",
         "url": "https://www.poundshop.com/catalogsearch/result/?q=",
-        "enabled": true
+        "enabled": true,
+        "num_tiles_to_search": 10
       },
       {
         "name": "Poundland",
         "url": "https://www.poundland.co.uk/catalogsearch/result/?q=",
-        "enabled": true
+        "enabled": true,
+        "num_tiles_to_search": 10
       }
     ]
   }
