@@ -49,6 +49,8 @@ The script supports the following retailers:
 - Sainsburys
 - Poundland
 - Poundshop
+- Morrions
+- Aldi
 
 ## License
 
