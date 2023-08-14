@@ -41,6 +41,18 @@
         "url": "https://www.poundland.co.uk/catalogsearch/result/?q=",
         "enabled": true,
         "num_tiles_to_search": 10
+      },
+      {
+        "name": "Aldi",
+        "url": "https://groceries.aldi.co.uk/en-GB/Search?keywords=",
+        "enabled": true,
+        "num_tiles_to_search": 10
+      },
+      {
+        "name": "Morrisons",
+        "url": "https://groceries.morrisons.com/search?entry=",
+        "enabled": true,
+        "num_tiles_to_search": 10
       }
     ]
   }

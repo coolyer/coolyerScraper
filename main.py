@@ -63,8 +63,7 @@ while True:
                                             './/span[@class= "styled__Text-sc-1xbujuz-1 ldbwMG beans-link__text"]')))
 
                             pricePerMil_element = WebDriverWait(tile, webWaitTime).until(
-                            EC.visibility_of_element_located((By.CSS_SELECTOR, '.styled__StyledFootnote-sc-119w3hf-7.icrlVF.styled__Subtext-sc-8qlq5b-2.bNJmdc.beans-price__subtext'))
-                             )
+                            EC.visibility_of_element_located((By.CSS_SELECTOR, '.styled__StyledFootnote-sc-119w3hf-7.icrlVF.styled__Subtext-sc-8qlq5b-2.bNJmdc.beans-price__subtext')))
                             try:
                                 clubcard_price_element = tile.find_element(By.XPATH, './/span[contains(@class, "offer-text")]')
                                 clubcard_price = clubcard_price_element.text.strip()
@@ -132,7 +131,7 @@ while True:
                     
                 except Exception as e:
                     print(f"{retailer} error: {str(e)}")
-                     
+                    
             elif retailer == 'B&M':
                 try:
                     tiles = driver.find_elements(By.XPATH, '//li[@class="col-6 col-landscape-4 mt-3 pt-lg-3 px-lg-3"]')[:retailers[retailer]['num_tiles_to_search']]
@@ -181,7 +180,7 @@ while True:
 
                 except Exception as e:
                         print(f"{retailer} error: {str(e)}")
-         
+                        
             elif retailer == 'Sainsburys':
                 try:
                     tiles1 = driver.find_elements(By.XPATH, '//li[@class= "pt-grid-item ln-o-grid__item ln-u-1/2@xs ln-u-1/3@sm ln-u-1/4@md ln-u-1/5@xl"]')[:retailers[retailer]['num_tiles_to_search']]
@@ -192,14 +191,16 @@ while True:
                         try:
                             price_element1 = tile.find_elements(By.XPATH, './/div[@class = "pricing"]/p[@class = "pricePerUnit"]')
                             price_element2 = tile.find_elements(By.XPATH, './/span[contains(@class, "pt__cost__retail-price pt__cost__retail-price--with-nectar-not-associated")]')
-
+                            price_element3 = tile.find_elements(By.CLASS_NAME, 'pt__cost__retail-price')
                             # Extract the price based on whichever element is found
                             price = ""
                             if price_element1:
                                 price = price_element1[0].text.strip()
                             elif price_element2:
                                 price = price_element2[0].text.strip()
-
+                            elif price_element3:
+                                price = price_element3[0].text.strip()
+                                
                             name_element1 = tile.find_elements(By.XPATH, './/a[contains(@class, "pt__link")]')
                             name_element2 = tile.find_elements(By.XPATH, './/div[contains(@class, "productNameAndPromotions")]/h3/a')
 
@@ -224,7 +225,6 @@ while True:
                             # Extract the regular price from the price element
                             
                             product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price}|{nectar_price}\n")
-                           
                         except Exception as e:
                             print(f"{retailer} error: {str(e)}")
                 except Exception as e:
@@ -318,7 +318,6 @@ while True:
                                 poundLandOffers = None
                             
                             name = item_name_element.text.strip()
-                           
                             
                             if poundLandOffers is not None:
                                 product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price}|{poundLandOffers} each \n")
@@ -330,8 +329,63 @@ while True:
                     
                 except Exception as e:
                     print(f"{retailer} error: {str(e)}")  
+            elif retailer == 'Aldi':
+                try:
+                    tiles = driver.find_elements(By.XPATH, '//div[@data-qa="search-result"]')[:retailers[retailer]['num_tiles_to_search']]
+                    product_data[retailer] = ""
+                    for index, tile in enumerate(tiles):
+                            try:
+                                name_element = tile.find_element(By.XPATH, './/a[@data-qa="search-product-title"]')
+                                price_element = tile.find_element(By.XPATH, './/span[@class="h4"]/span')
 
-            
+                                # Extract the product name and price
+                                name = name_element.text.strip()
+                                price = price_element.text.strip()
+
+                                # Add the extracted data to product_data
+                                product_data[retailer] += (f"|Tile {index + 1} - Name: {name}, Price: {price}|\n")
+                            except Exception as e:
+                                print(f"{retailer} error: {str(e)}")
+                except Exception as e:
+                    print(f"{retailer} error: {str(e)}")
+                    
+            elif retailer == 'Morrisons':
+                try:
+                    tiles = driver.find_elements(By.XPATH, '//li[contains(@class, "fops-item") and contains(@class, "fops-item--on_offer") or contains (@class, "fops-item fops-item--cluster")]')[:retailers[retailer]['num_tiles_to_search']]
+                    product_data[retailer] = ""
+                    for index, tile in enumerate(tiles):
+                        try:
+                            name_element = tile.find_element(By.XPATH, './/div[@class ="fop-description"]/h4[@class="fop-title"]')
+                            price_element = tile.find_elements(By.XPATH, './/div[@class = "price-group-wrapper"]/span[@class="fop-price"]')
+                            price_element1 = tile.find_elements(By.XPATH, './/div[@class = "price-group-wrapper"]/span[@class ="fop-price price-offer"]')
+                            price = ""
+                            if price_element:
+                                price = price_element[0].text.strip()
+                            
+                            elif price_element1:
+                                price = price_element1[0].text.strip()
+                            # Extract the product name and price
+                            name = name_element.text.strip()
+                            try:
+                            # Check if there's a promotional offer
+                                promo_element = tile.find_element(By.XPATH, './/a[@class="fop-row-promo promotion-offer"]/span')
+                                promo = promo_element.text.strip()
+                            except NoSuchElementException:
+                                promo = None
+                            try:
+                                weight_element = tile.find_element(By.XPATH, './/span[@class="fop-catch-weight"]')
+                                weight = weight_element.text.strip()
+                            except NoSuchElementException:
+                                weight = None
+                            # Add the extracted data to product_data
+                            if promo:
+                                product_data[retailer] += (f"|Tile {index + 1} - Name: {name} {weight}, Price: {price}|{promo}\n")
+                            else:
+                                product_data[retailer] += (f"|Tile {index + 1} - Name: {name} {weight}, Price: {price}|\n")
+                        except Exception as e:
+                            print(f"{retailer} error: {str(e)}")
+                except Exception as e:
+                    print(f"{retailer} error: {str(e)}")
         # Close the browser window
         driver.quit()
 
@@ -353,5 +407,6 @@ while True:
 
 # End of loop, exit the program
 print("Thank you for using CoolyerScraper. Please consider improving via code inputs or ideas or donating(Not needed but will be apprecited),\nGoodbye! ")
+exit(0)
 
 
