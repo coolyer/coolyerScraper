@@ -18,13 +18,23 @@ while True:
     product_name = input("Enter the product name: ")
 
     # Not Needed anymore. Can be readadded by doing [:num_tiles_to_search] on each retailers tiles search html.
+    # Added to Json File.
     #num_tiles_to_search = get_integer_input("Enter the number of tiles to search for: ")
 
     # Get browser the user chooses.
-    browser_choice = get_integer_input("Choose a browser:\n1. Firefox\n2. Chrome\nPlease choose a number only: ")
-
-    # Initialize the driver based on the browser choice using the function from browser_handler.py
-    driver = initialize_driver(browser_choice)
+    #browser_choice = get_integer_input("Choose a browser:\n1. Firefox\n2. Chrome\n3. Edge\nPlease choose a number only: ")
+    while True:
+            try:
+                browser_choice = get_integer_input("Choose a browser:\n1. Firefox\n2. Chrome\n3. Edge\nPlease choose a number only: ")
+                if browser_choice in (1, 2, 3):
+                    driver = initialize_driver(browser_choice)
+                    break  # Valid choice, exit the loop
+                else:
+                    print("Invalid choice. Please enter 1, 2, or 3.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+            # Initialize the driver based on the browser choice using the function from browser_handler.py
+            
 
     # Define a function to scrape the product prices and names from different retailers
     def scrape_product_prices(product_name):
