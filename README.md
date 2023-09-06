@@ -68,7 +68,7 @@ The script uses [Selenium](https://www.selenium.dev/) for browser automation and
 
 This project aims to be a versatile and efficient product scraper, capable of retrieving prices and product names from various online retailers. While the current version provides a solid foundation, there are several exciting features planned for future updates:
 
-* Expanded Browser Support: In upcoming versions, we plan to add support for more web browsers, including Brave, Opera, and Bing. This will give users greater flexibility in choosing their preferred browser for the scraping process.
+* Expanded Browser Support: In upcoming versions, we plan to add support for more web browsers, including Brave, Opera. This will give users greater flexibility in choosing their preferred browser for the scraping process.
 
 * Code Optimization: My commitment to excellence means continually refining and optimizing the codebase. Future updates will focus on enhancing performance and streamlining the scraping process for improved efficiency.
 
