@@ -6,6 +6,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.edge.service import Service as EdgeService
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
+
 def initialize_driver(browser_choice):
     if browser_choice == 1:
         # Firefox
@@ -22,7 +23,7 @@ def initialize_driver(browser_choice):
         # Microsoft Edge
         options = webdriver.EdgeOptions()
         options.use_chromium = True
-        options.add_argument ("headless")
+        options.add_argument ("--headless=new")
         driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=options)
         print ("Starting Edge\nCurrently undergoing improvements, including resolving errors and enhancing compatibility with certain websites.")
     return driver
