@@ -70,7 +70,7 @@ while True:
                             item_name_element = WebDriverWait(tile, webWaitTime).until(
                             EC.visibility_of_element_located((
                                             By.XPATH,
-                                            './/span[@class= "styled__Text-sc-1xbujuz-1 ldbwMG beans-link__text"]')))
+                                            './/span[@class= "styled__Text-sc-1i711qa-1 xZAYu ddsweb-link__text"]')))
 
                             pricePerMil_element = WebDriverWait(tile, webWaitTime).until(
                             EC.visibility_of_element_located((By.CSS_SELECTOR, '.styled__StyledFootnote-sc-119w3hf-7.icrlVF.styled__Subtext-sc-8qlq5b-2.bNJmdc.beans-price__subtext')))
